@@ -1,0 +1,63 @@
+// 1. Load Sass tools first
+@use '@angular/material' as mat;
+@use 'sass:map';
+@use 'sass:color';
+
+// 2. Define your overrides BEFORE Bootstrap loads
+@use 'scss/settings/bootstrap-variables' as bootstrap-custom;
+
+// 3. Then load Bootstrap
+@use 'bootstrap/scss/bootstrap' as bs;
+
+// 4. Then the rest of your theme
+@use 'scss/settings/color-variables' as colors;
+@use 'scss/settings/theme-variables' as theme;
+@use 'scss/themes/layouts/layouts';
+@use 'scss/themes/components/components';
+@use 'scss/themes/pages/page';
+@use 'scss/style-preset';
+
+// Angular Material theme setup
+html {
+  @include mat.theme((
+    color: (
+      primary: mat.$magenta-palette,
+      tertiary: mat.$violet-palette,
+    ),
+    typography: mat.define-typography-config(),
+    density: 0,
+  ));
+}
+
+// Base styles
+html, body { 
+  height: 100%; 
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  color-scheme: light;
+  background-color: var(--mat-sys-surface);
+  color: var(--mat-sys-on-surface);
+}
+
+// Font imports (relative paths)
+@import 'scss/fonts/berry/berry-icons.css';
+@import 'scss/fonts/tabler-icons.min.css';
+@import 'scss/fonts/phosphor/duotone/style.css';
+
+// Custom overrides
+.mat-mdc-card {
+  box-shadow: var(--mat-sys-elevation-1) !important;
+}
+
+.mat-mdc-button {
+  font-family: inherit;
+}
+
+.auth-container {
+  min-height: 100vh;
+  
+  .mat-mdc-card {
+    background: var(--mat-sys-surface-container);
+    color: var(--mat-sys-on-surface);
+  }
+}

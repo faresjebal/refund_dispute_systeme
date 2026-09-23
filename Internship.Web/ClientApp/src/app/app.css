@@ -1,0 +1,20 @@
+.spacer {
+  flex: 1 1 auto;
+}
+
+
+.content-card {
+  width: 100%;
+  max-width: 1200px;
+  margin: 20px auto;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.95);
+}
+
+/* Keep your existing responsive styles */
+@media screen and (max-width: 650px) {
+  .content {
+    flex-direction: column;
+  }
+  /* etc... */
+}
