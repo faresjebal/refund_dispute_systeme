@@ -26,6 +26,8 @@ Prerequisites: .NET 9 SDK, SQL Server or SQL Server LocalDB, Node.js and npm com
    dotnet user-secrets set "SendGrid:ApiKey" "YOUR_OWN_SENDGRID_KEY"
    ```
 
+   For a local development admin account, also configure `SeedAdmin:Email` and `SeedAdmin:Password` with unique values in user secrets. The API seeds that account only in Development, when both values are present. Do not reuse a password or put one in the repository.
+
    Alternatively, set `JwtSettings__Secret`, `SendGrid__ApiKey`, and `ConnectionStrings__DBConnection` as environment variables. Never use the example strings as real credentials.
 
 3. Run the API:
@@ -51,6 +53,7 @@ Prerequisites: .NET 9 SDK, SQL Server or SQL Server LocalDB, Node.js and npm com
 
 - The JWT signing secret is supplied outside source control. A value previously committed to the public repository must be treated as exposed and rotated if it was used anywhere beyond local testing. A new commit alone does not remove the old value from Git history.
 - Runtime files in `wwwroot/uploads` should not be committed. Previously committed screenshots should be reviewed for personal or company information and removed from history if necessary.
+- Uploaded attachments are not served as anonymous static files. An authenticated download flow must be implemented before the UI can retrieve stored attachments.
 - API authorization should be verified with accounts in different roles. Do not use the repository as a production service without a full security review.
 
 ## Current limitations
