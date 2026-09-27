@@ -156,7 +156,7 @@ else
 }
 
 app.UseHttpsRedirection();
-app.UseStaticFiles(); // Enable static files for uploaded attachments
+// Uploaded attachments contain user data and must not be served anonymously.
 
 // SPA static files configuration
 
@@ -208,8 +208,15 @@ async Task InitializeDatabaseAsync(IServiceProvider services)
         await CreateRoleIfNotExistsAsync(roleManager, "Admin");
         await CreateRoleIfNotExistsAsync(roleManager, "User");
 
-        logger.LogInformation("Creating default admin user...");
-        await CreateDefaultAdminAsync(userManager);
+        if (app.Environment.IsDevelopment())
+        {
+            var adminEmail = app.Configuration["SeedAdmin:Email"];
+            var adminPassword = app.Configuration["SeedAdmin:Password"];
+            if (!string.IsNullOrWhiteSpace(adminEmail) && !string.IsNullOrWhiteSpace(adminPassword))
+            {
+                await CreateDefaultAdminAsync(userManager, adminEmail, adminPassword);
+            }
+        }
 
         // Comment out test data seeding until entities are fully implemented
         // logger.LogInformation("Seeding test data...");
@@ -237,11 +244,8 @@ async Task CreateRoleIfNotExistsAsync(RoleManager<IdentityRole> roleManager, str
     }
 }
 
-async Task CreateDefaultAdminAsync(UserManager<ApplicationUser> userManager)
+async Task CreateDefaultAdminAsync(UserManager<ApplicationUser> userManager, string adminEmail, string adminPassword)
 {
-    const string adminEmail = "admin@internship.com";
-    const string adminPassword = "Admin123!";
-
     var existingAdmin = await userManager.FindByEmailAsync(adminEmail);
     if (existingAdmin != null)
     {
