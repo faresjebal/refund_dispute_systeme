@@ -306,6 +306,7 @@ namespace Internship.Application.Services
             return new RefundRequestResponse
             {
                 RefundId = refundRequest.RefundId,
+                UserId = refundRequest.UserId,
                 TransactionId = refundRequest.TransactionId,
                 TransactionReference = refundRequest.Transaction?.TransactionId ?? "N/A",
                 RequestedAmount = refundRequest.RequestedAmount,
