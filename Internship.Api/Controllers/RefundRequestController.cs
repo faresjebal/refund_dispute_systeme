@@ -150,7 +150,7 @@ namespace Internship.API.Controllers
                 var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
                 var isAdmin = User.IsInRole("Admin");
 
-                if (!isAdmin && refundRequest.UserFullName != User.Identity?.Name)
+                if (!isAdmin && (string.IsNullOrEmpty(userId) || refundRequest.UserId != userId))
                 {
                     _logger.LogWarning("User {UserId} unauthorized to access refund request {RefundId}", userId, refundId);
                     return Forbid();
