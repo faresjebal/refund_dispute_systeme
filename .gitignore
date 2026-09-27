@@ -5,6 +5,7 @@
 
 # dotenv files
 .env
+**/wwwroot/uploads/
 
 # User-specific files
 *.rsuser
