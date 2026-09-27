@@ -5,6 +5,7 @@ namespace Internship.Application.DTOs.RefundRequest
     public class RefundRequestResponse
     {
         public string RefundId { get; set; } = string.Empty;
+        public string UserId { get; set; } = string.Empty;
         public string TransactionId { get; set; } = string.Empty;
         public string TransactionReference { get; set; } = string.Empty;
         public decimal RequestedAmount { get; set; }
