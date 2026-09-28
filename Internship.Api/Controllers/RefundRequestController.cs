@@ -150,7 +150,7 @@ namespace Internship.API.Controllers
                 var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
                 var isAdmin = User.IsInRole("Admin");
 
-                if (!isAdmin && refundRequest.UserFullName != User.Identity?.Name)
+                if (!isAdmin && (string.IsNullOrEmpty(userId) || refundRequest.UserId != userId))
                 {
                     _logger.LogWarning("User {UserId} unauthorized to access refund request {RefundId}", userId, refundId);
                     return Forbid();
@@ -164,6 +164,32 @@ namespace Internship.API.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError,
                     new { message = "An error occurred while retrieving the refund request" });
             }
+        }
+
+        [HttpGet("{refundId}/attachment")]
+        public async Task<IActionResult> DownloadAttachment(string refundId)
+        {
+            var refundRequest = await _refundRequestService.GetRefundRequestAsync(refundId);
+            if (refundRequest == null || string.IsNullOrWhiteSpace(refundRequest.AttachmentPath))
+                return NotFound();
+
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (!User.IsInRole("Admin") && (string.IsNullOrEmpty(userId) || refundRequest.UserId != userId))
+                return Forbid();
+
+            var storedPath = refundRequest.AttachmentPath.Replace('\\', '/');
+            const string prefix = "uploads/refund/";
+            if (!storedPath.StartsWith(prefix, StringComparison.OrdinalIgnoreCase))
+                return NotFound();
+            var fileName = Path.GetFileName(storedPath);
+            if (string.IsNullOrWhiteSpace(fileName) ||
+                !string.Equals(storedPath, prefix + fileName, StringComparison.OrdinalIgnoreCase))
+                return NotFound();
+
+            var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", "refund", fileName);
+            if (!System.IO.File.Exists(filePath))
+                return NotFound();
+            return PhysicalFile(filePath, "application/octet-stream", fileName);
         }
 
         [HttpGet("my-refund-requests")]

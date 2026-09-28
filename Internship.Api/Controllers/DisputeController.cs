@@ -201,6 +201,29 @@ namespace Internship.API.Controllers
             }
         }
 
+        [HttpGet("{disputeId}/attachment")]
+        [Authorize(Policy = "AdminOrAssignedUser")]
+        public async Task<IActionResult> DownloadAttachment(string disputeId)
+        {
+            var dispute = await _disputeService.GetDisputeAsync(disputeId);
+            if (dispute == null || string.IsNullOrWhiteSpace(dispute.AttachmentPath))
+                return NotFound();
+
+            var storedPath = dispute.AttachmentPath.Replace('\\', '/');
+            const string prefix = "uploads/dispute/";
+            if (!storedPath.StartsWith(prefix, StringComparison.OrdinalIgnoreCase))
+                return NotFound();
+            var fileName = Path.GetFileName(storedPath);
+            if (string.IsNullOrWhiteSpace(fileName) ||
+                !string.Equals(storedPath, prefix + fileName, StringComparison.OrdinalIgnoreCase))
+                return NotFound();
+
+            var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", "dispute", fileName);
+            if (!System.IO.File.Exists(filePath))
+                return NotFound();
+            return PhysicalFile(filePath, "application/octet-stream", fileName);
+        }
+
         [HttpGet("my-disputes")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]

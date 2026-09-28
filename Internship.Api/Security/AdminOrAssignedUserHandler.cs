@@ -62,7 +62,7 @@ namespace Internship.Api.Security
                     return;
                 }
 
-                if (!httpContext.Request.RouteValues.TryGetValue("id", out var disputeIdObj))
+                if (!httpContext.Request.RouteValues.TryGetValue("disputeId", out var disputeIdObj))
                 {
                     _logger.LogWarning("No dispute ID found in route values, failing authorization");
                     context.Fail();
