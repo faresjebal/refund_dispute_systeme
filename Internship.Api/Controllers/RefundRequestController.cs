@@ -166,6 +166,32 @@ namespace Internship.API.Controllers
             }
         }
 
+        [HttpGet("{refundId}/attachment")]
+        public async Task<IActionResult> DownloadAttachment(string refundId)
+        {
+            var refundRequest = await _refundRequestService.GetRefundRequestAsync(refundId);
+            if (refundRequest == null || string.IsNullOrWhiteSpace(refundRequest.AttachmentPath))
+                return NotFound();
+
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (!User.IsInRole("Admin") && (string.IsNullOrEmpty(userId) || refundRequest.UserId != userId))
+                return Forbid();
+
+            var storedPath = refundRequest.AttachmentPath.Replace('\\', '/');
+            const string prefix = "uploads/refund/";
+            if (!storedPath.StartsWith(prefix, StringComparison.OrdinalIgnoreCase))
+                return NotFound();
+            var fileName = Path.GetFileName(storedPath);
+            if (string.IsNullOrWhiteSpace(fileName) ||
+                !string.Equals(storedPath, prefix + fileName, StringComparison.OrdinalIgnoreCase))
+                return NotFound();
+
+            var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", "refund", fileName);
+            if (!System.IO.File.Exists(filePath))
+                return NotFound();
+            return PhysicalFile(filePath, "application/octet-stream", fileName);
+        }
+
         [HttpGet("my-refund-requests")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
