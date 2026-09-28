@@ -16,6 +16,6 @@ The work I present from this repository is the **backend API**. The presence of 
 
 ## Review status
 
-A [draft security and documentation PR](https://github.com/faresjebal/refund_dispute_systeme/pull/1) proposes ownership/authorization fixes, removal of exposed development credentials and a test email endpoint, and safer upload handling. It has **not** been merged or run against a local SQL Server in this review. Removing anonymous static access means an authenticated attachment download endpoint is still needed before clients can retrieve uploads.
+A [draft security and documentation PR](https://github.com/faresjebal/refund_dispute_systeme/pull/1) proposes ownership/authorization fixes, removal of exposed development credentials and a test email endpoint, and safer upload handling. It has **not** been merged or run against a local SQL Server in this review. The draft now includes authenticated attachment download routes; they need local integration testing before merging.
 
 The public Git history contains an earlier JWT value and development artifacts. Treat any reused secret as exposed and review historical screenshots for sensitive content. This is a portfolio project, not a production deployment. See the draft PR for proposed setup instructions and remaining limitations.
