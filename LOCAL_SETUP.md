@@ -45,7 +45,7 @@ The Angular scaffold is separate from the verified API scope. It should not be c
 
 - The JWT signing secret is supplied outside source control. A value previously committed to the public repository must be treated as exposed and rotated if it was used anywhere beyond local testing. A new commit alone does not remove the old value from Git history.
 - Runtime files in `wwwroot/uploads` should not be committed. Previously committed screenshots should be reviewed for personal or company information and removed from history if necessary.
-- Uploaded attachments are not served as anonymous static files. An authenticated download flow must be implemented before the UI can retrieve stored attachments.
+- Uploaded attachments are not served as anonymous static files. Proposed authenticated GET routes at `/api/RefundRequest/{refundId}/attachment` and `/api/Dispute/{disputeId}/attachment` verify resource access and return a download. They require local integration testing, including missing files and different user roles.
 - API authorization should be verified with accounts in different roles. Do not use the repository as a production service without a full security review.
 
 ## Current limitations
