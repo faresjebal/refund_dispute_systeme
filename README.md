@@ -1,6 +1,6 @@
 # Refund and Dispute Management System
 
-A full-stack internship project for recording transactions, submitting refund requests and disputes, and letting authorized staff process them. The repository contains an ASP.NET Core API, an Angular client, SQL Server persistence through Entity Framework Core, and audit logs. It is a portfolio copy of work completed during an internship at MS Solution; it is not presented as a production deployment.
+An ASP.NET Core internship API for recording transactions, submitting refund requests and disputes, and letting authorized staff process them. The repository contains SQL Server persistence through Entity Framework Core and audit logs. An Angular starter project is also present, but the refund/dispute frontend is not implemented in that client. It is a portfolio copy of work completed during an internship at MS Solution; it is not presented as a production deployment.
 
 ## What is here
 
@@ -10,13 +10,13 @@ A full-stack internship project for recording transactions, submitting refund re
 | `Internship.Application` | DTOs, interfaces, and business services |
 | `Internship.Domain` | Entities and domain interfaces |
 | `Internship.Infrastructure` | EF Core context, migrations, repositories, token and email services |
-| `Internship.Web/ClientApp` | Angular frontend |
+| `Internship.Web/ClientApp` | Angular starter scaffold; no verified refund/dispute UI integration |
 
 The API exposes authentication, transactions, refund requests, disputes, and audit log controllers. Refund and dispute workflows include user submissions and staff processing. Consult the controllers and services for the exact endpoints and current behavior.
 
 ## Local setup
 
-Prerequisites: .NET 9 SDK, SQL Server or SQL Server LocalDB, Node.js and npm compatible with Angular 20. The checked-in connection string targets Windows LocalDB. On another system, override it with a SQL Server connection string.
+Prerequisites for the API: .NET 9 SDK and SQL Server or SQL Server LocalDB. The checked-in connection string targets Windows LocalDB. On another system, override it with a SQL Server connection string.
 
 1. Clone the repository and enter its root.
 2. Set configuration locally. Do **not** commit real secrets. The API requires a JWT signing key and the email service expects a SendGrid API key. For local development, use .NET user secrets from `Internship.Api`:
@@ -39,15 +39,7 @@ Prerequisites: .NET 9 SDK, SQL Server or SQL Server LocalDB, Node.js and npm com
 
    The application attempts to apply EF Core migrations on startup. Its configured local endpoints are `https://localhost:7266` and `http://localhost:5095`; Swagger is enabled in Development at `/swagger`.
 
-4. In another terminal, start the Angular client:
-
-   ```bash
-   cd Internship.Web/ClientApp
-   npm ci
-   npm start
-   ```
-
-   The Angular development proxy targets `https://localhost:7266`. Trust the .NET development certificate if your local proxy reports a certificate error.
+The Angular scaffold is separate from the verified API scope. It should not be cited as an integrated refund/dispute frontend.
 
 ## Security and portfolio notes
 
